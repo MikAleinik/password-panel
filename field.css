@@ -1,0 +1,30 @@
+.field {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 48px;
+    max-width: 25%;
+
+    margin: 1%;
+}
+
+.field__number {
+    margin: 0% 1%;
+}
+
+.field__input {
+    height: 90%;
+    width: 50%;
+
+    margin: 0% 1%;
+}
+
+.field__icon {
+    margin: 0% 1%;
+}
+
+.field__icon:hover {
+    cursor: pointer;
+}

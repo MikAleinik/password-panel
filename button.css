@@ -1,0 +1,22 @@
+.button__primary {
+    min-height: 54px;
+    max-width: 327px;
+
+    margin: auto;
+    margin-top: 24px;
+
+    border-radius: 100px;
+
+    color: var(--color-primary-inverse);
+    background: var(--color-primary-default);
+}
+
+.button__primary:hover {
+    cursor: pointer;
+}
+
+.button__primary:disabled {
+    background: var(--color-primary-disabled);
+    opacity: 0.5;
+    cursor: default;
+}
