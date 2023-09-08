@@ -11,6 +11,8 @@
 }
 
 .field__number {
+    width: 12%;
+
     margin: 0% 1%;
 }
 
@@ -19,6 +21,10 @@
     width: 50%;
 
     margin: 0% 1%;
+    padding: 5%;
+    box-sizing: border-box;
+
+    border-radius: 6px;
 }
 
 .field__icon {

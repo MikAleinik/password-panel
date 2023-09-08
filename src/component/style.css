@@ -1,3 +1,20 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    max-width: 600px;
+
+    margin: 0 auto;
+    padding: 0.5% 2.5%;
+
+    border: 1px solid;
+    box-sizing: border-box;
+
+    border-radius: 24px;
+}
+
 .button__primary {
     min-height: 54px;
     max-width: 327px;
