@@ -8,7 +8,7 @@ const style = {
     PANEL: 'panel',
     BUTTON: 'button__primary',
 }
-const infoText = 'Вы можете вставить всю свою секретную фразу для восстановления в любое поле';
+const infoText = 'Вы можете вставить всю свою секретную фразу для восстановления в любое поле, проверочная фраза выведена в консоль';
 const errorTextEmptyFields = 'Секретные фразы для восстановления содержат 12, 15, 18, 21 или 24 слова';
 const errorTextBadPassword = 'Неверная секретная фраза для восстановления';
 const buttonText = 'Подтвердите секретную фразу для восстановления';
@@ -25,7 +25,10 @@ const component = {
 }
 
 export default function createComponent() {
-    const headerElement = createHeaderComponent(defaultCountPasswordItems, countFieldChangeHandler);
+    const headerElement = createHeaderComponent(defaultCountPasswordItems, (count) => {
+        createPanelComponent(count);
+        validateHandler();
+    });
     const infoElement = createInfoComponent(infoText);
     component.panel = createPanelComponent(defaultCountPasswordItems);
     component.button = createElement({
@@ -38,46 +41,50 @@ export default function createComponent() {
 
     component.main.append(headerElement.getHtml(), infoElement.getHtml(), component.panel.getHtml(), component.button);
 
-    component.panel.getHtml().addEventListener('keyup', fieldKeyupHandler);
+    component.panel.getHtml().addEventListener('keyup', validateHandler);
 
     return {
         getHtml: () => component.main
     };
 }
-function fieldKeyupHandler() {
+function validateHandler() {
     if (component.panel.isEmptyPassword()) {
-        component.panel.getHtml().nextElementSibling.remove();
-        component.error = null;
+        if(component.error) {
+            removeErrorInfo();
+        }
         return;
     }
 
     if (component.panel.isPartialEmptyPassword()) {
         if (component.error) {
-            component.panel.getHtml().nextElementSibling.remove();
+            removeErrorInfo();
         }
-        component.error = createInfoComponent(errorTextEmptyFields, true);
-        component.panel.getHtml().insertAdjacentElement('afterend', component.error.getHtml());
-        component.button.setAttribute('disabled', '');
+        showErrorInfo(errorTextEmptyFields);
         return;
     }
 
     if (!component.panel.isValidPassword()) {
         if (component.error) {
-            component.panel.getHtml().nextElementSibling.remove();
+            removeErrorInfo();
         }
-        component.error = createInfoComponent(errorTextBadPassword, true);
-        component.panel.getHtml().insertAdjacentElement('afterend', component.error.getHtml());
-        component.button.setAttribute('disabled', '');
+        showErrorInfo(errorTextBadPassword);
         return;
     }
 
-    component.panel.getHtml().nextElementSibling.remove();
-    component.error = null;
+    if(component.error) {
+        removeErrorInfo();
+    }
     component.button.removeAttribute('disabled');
 }
 /**
- * @param {number} count
+ * @param {string} text 
  */
-function countFieldChangeHandler(count) {
-    component.panel = createPanelComponent(count);
+function showErrorInfo(text) {
+    component.error = createInfoComponent(text, true);
+    component.panel.getHtml().insertAdjacentElement('afterend', component.error.getHtml());
+    component.button.setAttribute('disabled', '');
+}
+function removeErrorInfo(){
+    component.panel.getHtml().nextElementSibling.remove();
+    component.error = null;
 }
