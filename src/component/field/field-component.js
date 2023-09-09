@@ -11,7 +11,7 @@ const style = {
 };
 
 /**
- * @typedef {{ main: HTMLElement, input: HTMLInputElement, icon: HTMLDivElement, isHidden: boolean }} FiedlComponent
+ * @typedef {{ main: HTMLElement, input: HTMLInputElement, icon: HTMLDivElement, isHidden: boolean, value: string }} FiedlComponent
  */
 /**
  * @param {number} numberItem
@@ -29,6 +29,7 @@ export default function createFieldComponent(numberItem, fields) {
         input: null,
         icon: null,
         isHidden: true,
+        value: '',
     };
 
     const textElement = createElement({
@@ -49,13 +50,32 @@ export default function createFieldComponent(numberItem, fields) {
     component.main.append(textElement, component.input, component.icon);
 
     component.icon.addEventListener('click', () => iconClickHandler(component, fields));
+    component.input.addEventListener('keyup', (event) => inputChangeHandler(event, component));
+    component.input.addEventListener('input', (event) => inputChangeHandler(event, component));
 
     return {
         getHtml: () => component.main,
-        getValue: () => component.input.value,
-        setValue: (newValue) => (component.input.value = newValue),
+        getValue: () => component.value,
+        setValue: (newValue) => {
+            component.input.value = newValue;
+            component.value = newValue;
+        },
         hide: () => setHidden(component),
     };
+}
+/**
+ * @param {KeyboardEvent | ClipboardEvent} event
+ * @param {FiedlComponent} component
+ */
+function inputChangeHandler(event, component) {
+    const words = event.target.value.trim().split(' ');
+    if (words.length === 1) {
+        component.input.value = words[0];
+        component.value = words[0];
+    } else {
+        component.input.value = event.target.value.slice(component.value.length);
+        component.value = component.input.value;
+    }
 }
 /**
  * @param {FiedlComponent} component
@@ -73,7 +93,7 @@ function iconClickHandler(component, fields) {
  * @param {FiedlComponent} component
  */
 function toggleVisibility(component) {
-    if(component.isHidden) {
+    if (component.isHidden) {
         setShowed(component);
         component.isHidden = false;
     } else {
